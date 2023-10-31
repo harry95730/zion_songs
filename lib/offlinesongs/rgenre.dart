@@ -1,0 +1,321 @@
+import 'package:flutter/material.dart';
+import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/offlinesongs/ohome.dart';
+import 'package:songs_app/offlinesongs/psearch.dart';
+import 'package:songs_app/offlinesongs/qtelugu.dart';
+import 'song.dart';
+
+class ExpandableList extends StatefulWidget {
+  const ExpandableList({
+    super.key,
+  });
+
+  @override
+  State<ExpandableList> createState() => _ExpandableListState();
+}
+
+class _ExpandableListState extends State<ExpandableList> {
+  Map<String, List<Song>> searchResul = {};
+  void refresh() {
+    setState(() {
+      songs.sort((a, b) => a.number.compareTo(b.number));
+    });
+    searchResul = {};
+    for (var ele in songs) {
+      if (searchResul.containsKey(ele.genre)) {
+        searchResul[ele.genre]!.add(ele);
+      } else {
+        searchResul[ele.genre] = [ele];
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/i12.jpg"), fit: BoxFit.cover),
+        ),
+        child: ExpandableList1(
+          searchResults: searchResul,
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromRGBO(13, 13, 13, 1),
+        elevation: 2,
+        unselectedLabelStyle: const TextStyle(color: Colors.white),
+        unselectedItemColor: const Color.fromRGBO(251, 250, 250, 1),
+        currentIndex: 1,
+        showSelectedLabels: false,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.menu_book_rounded,
+              color: Color.fromRGBO(177, 158, 143, 1),
+            ),
+            label: 'SEARCH',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              color: Color.fromRGBO(177, 158, 143, 1),
+            ),
+            label: 'abc',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.menu_book_rounded,
+              color: Color.fromRGBO(177, 158, 143, 1),
+            ),
+            label: 'ALPHA INDEX',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyHomePage1(),
+              ),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HebronPage(),
+              ),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TeluguIndex(),
+              ),
+            );
+          }
+        },
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
+        onPressed: () async {
+          if (book1 == 'HEBRON_SONGS') {
+            book1 = 'ZION_SONGS';
+          } else {
+            book1 = 'HEBRON_SONGS';
+          }
+          await Decorate().fetchDataFromJsonFile();
+          refresh();
+        },
+        child: Ink(
+          child: Text(
+            book1 == 'ZION_SONGS' ? 'HEBRON SONGS' : 'ZION SONGS',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 22.0,
+                fontFamily: 'f1',
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ExpandableList1 extends StatefulWidget {
+  final Map<String, List<Song>> searchResults;
+  const ExpandableList1({
+    super.key,
+    required this.searchResults,
+  });
+
+  @override
+  State<ExpandableList1> createState() => _ExpandableList1State();
+}
+
+class _ExpandableList1State extends State<ExpandableList1> {
+  @override
+  void initState() {
+    super.initState();
+    songs.sort((a, b) => a.number.compareTo(b.number));
+    makegenre();
+  }
+
+  void makegenre() {
+    for (var ele in songs) {
+      if (widget.searchResults.containsKey(ele.genre)) {
+        widget.searchResults[ele.genre]!.add(ele);
+      } else {
+        widget.searchResults[ele.genre] = [ele];
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leadingWidth: 25,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              weight: 20.0,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HebronPage(),
+                ),
+              );
+            },
+          ),
+          title: const Padding(
+            padding: EdgeInsets.only(left: 20.0, right: 10),
+            child: Text(
+              'CATEGORY OF SONGS',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22.0,
+                  fontFamily: 'f1',
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 10),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: widget.searchResults.length,
+            itemBuilder: (context, index) {
+              final key = widget.searchResults.keys.elementAt(index);
+              final value = widget.searchResults[key];
+              return Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  padding: const EdgeInsets.all(3.0),
+                  alignment: Alignment.center,
+                  decoration: Decorate().completetile(),
+                  child: ExpansionTile(
+                    title: Text(
+                      key.toUpperCase(),
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: value!.length,
+                        itemBuilder: (context, idx) {
+                          final son = value[idx];
+                          return Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(3.0),
+                              alignment: Alignment.center,
+                              decoration: Decorate().completetile(),
+                              child: InkWell(
+                                onTap: () {
+                                  ha = son;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HebronSong(),
+                                    ),
+                                  );
+                                },
+                                child: Ink(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ListTile(
+                                      title: son.text.isNotEmpty
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  son.text,
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontStyle: FontStyle.italic,
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  son.etext.toUpperCase(),
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontStyle: FontStyle.italic,
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Text(
+                                              son.etext.toUpperCase(),
+                                              maxLines: 1,
+                                              style: const TextStyle(
+                                                fontSize: 20.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic,
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            ),
+                                      trailing: Text(
+                                        son.number.toString(),
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

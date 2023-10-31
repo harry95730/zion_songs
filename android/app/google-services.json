@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "270072332736",
+    "project_id": "songs-app-d55c6",
+    "storage_bucket": "songs-app-d55c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270072332736:android:2fb492e9f48a38b9cc0825",
+        "android_client_info": {
+          "package_name": "com.example.songs_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270072332736-f2fdsc85tt74a7d92sdvtm90vsvgk94d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5ifeCnIjmrcYlP_vkB-xPA3ZCfFto2s8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270072332736-f2fdsc85tt74a7d92sdvtm90vsvgk94d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
