@@ -1,16 +1,2 @@
-# songs_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a song lyrics app which is for our local chruch community as it is being in the process of expansion we want to extend to all the churches to have their songs in this application 
+Use of local hive storage for likes and 2 local songs books available and user can switch between song books and they are stored inside json file and youtube player is embeded so user can listen to the songs while watching lyrics 
