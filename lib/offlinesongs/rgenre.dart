@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/ohome.dart';
 import 'package:songs_app/offlinesongs/psearch.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
@@ -193,6 +194,24 @@ class _ExpandableList1State extends State<ExpandableList1> {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Fav()));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.favorite,
+                      color: Colors.pinkAccent.shade700,
+                      size: 25,
+                    ),
+                  ],
+                ))
+          ],
         ),
         const Padding(
           padding: EdgeInsets.only(bottom: 10),

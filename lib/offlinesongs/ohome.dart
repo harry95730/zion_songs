@@ -1,3 +1,4 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:songs_app/classoffunc/classes.dart';
 import 'package:songs_app/onlinestart.dart';
@@ -12,7 +13,6 @@ class HebronPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _HebronPageState createState() => _HebronPageState();
 }
 

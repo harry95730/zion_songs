@@ -26,16 +26,20 @@ class _ProgressIndicatorPageState extends State<ProgressIndicatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Loading...'),
-        backgroundColor: Colors.transparent,
-      ),
       body: Container(
         width: double.maxFinite,
         color: Colors.black,
         child: const Center(
-          child:
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               CircularProgressIndicator(backgroundColor: Colors.indigoAccent),
+              Text(
+                'Loading...',
+                style: TextStyle(color: Colors.indigoAccent),
+              )
+            ],
+          ),
         ),
       ),
     );

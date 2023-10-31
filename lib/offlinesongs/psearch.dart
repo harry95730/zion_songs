@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
 import 'package:songs_app/offlinesongs/rgenre.dart';
 import 'ohome.dart';
@@ -110,21 +111,40 @@ class _MyHomePage1State extends State<MyHomePage1> {
                   );
                 },
               ),
-              title: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 10),
-                child: TextField(
-                  onChanged: _onSearchTextChanged,
-                  controller: controller,
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.black,
+              title: Container(
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade100,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 10),
+                  child: TextField(
+                    onChanged: _onSearchTextChanged,
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      labelText: 'Search Song Number / Name',
+                      hintMaxLines: 1,
                     ),
-                    labelText: 'Search Song Number / Name',
-                    hintMaxLines: 1,
                   ),
                 ),
               ),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const Fav()));
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.favorite,
+                          color: Colors.pinkAccent.shade700,
+                          size: 25,
+                        ),
+                      ],
+                    ))
+              ],
             ),
             Expanded(
               child: _searchResults.isNotEmpty || controller.text.isNotEmpty
@@ -143,14 +163,15 @@ class _MyHomePage1State extends State<MyHomePage1> {
                               alignment: Alignment.center,
                               decoration: Decorate().completetile(),
                               child: InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   ha = son1;
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const HebronSong(),
                                     ),
                                   );
+                                  setState(() {});
                                 },
                                 child: Ink(
                                   decoration: const BoxDecoration(

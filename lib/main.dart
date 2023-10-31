@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:songs_app/classoffunc/classes.dart';
 import 'package:songs_app/classoffunc/notification.dart';
 import 'package:songs_app/loadingpage.dart';
+import 'package:songs_app/offlinesongs/hivdb.dart';
 import 'package:songs_app/offlinesongs/psearch.dart';
 import 'package:songs_app/offlinesongs/song.dart';
 import 'package:songs_app/offlinesongs/ohome.dart';
@@ -14,10 +16,12 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
+  await Firebase.initializeApp();
   PushNotifications.init();
   PushNotifications.localNotiInit();
+  await Hive.initFlutter();
+  Hive.registerAdapter(SongDataAdapter());
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String payloadData = jsonEncode(message.data);
@@ -26,6 +30,18 @@ void main() async {
           title: message.notification!.title!,
           body: message.notification!.body!,
           payload: payloadData);
+    }
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+    if (message.notification != null) {
+      await navigatorKey.currentState!.pushNamed("/process");
+      if (message.data['book'] == 'HEBRON SONGS') {
+        book1 = 'HEBRON_SONGS';
+      } else if (message.data['book'] == 'ZION SONGS') {
+        book1 = 'ZION_SONGS';
+      }
+      await Decorate().fetchDataFromJsonFile();
+      await navigatorKey.currentState!.pushNamed("/song", arguments: message);
     }
   });
   runApp(const MyApp());
@@ -40,6 +56,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   void ca() async {
+    await fetchdatafromBox();
     RemoteMessage? initialmessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialmessage != null) {
@@ -54,19 +71,6 @@ class _MyAppState extends State<MyApp> {
           .pushNamed("/song", arguments: initialmessage);
       setState(() {});
     }
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      if (message.notification != null) {
-        await navigatorKey.currentState!.pushNamed("/process");
-        if (message.data['book'] == 'HEBRON SONGS') {
-          book1 = 'HEBRON_SONGS';
-        } else if (message.data['book'] == 'ZION SONGS') {
-          book1 = 'ZION_SONGS';
-        }
-        await Decorate().fetchDataFromJsonFile();
-        await navigatorKey.currentState!.pushNamed("/song", arguments: message);
-        setState(() {});
-      }
-    });
   }
 
   @override

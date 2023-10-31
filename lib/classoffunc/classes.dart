@@ -1,22 +1,22 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:songs_app/offlinesongs/hivdb.dart';
 import 'package:songs_app/offlinesongs/ohome.dart';
 import 'package:songs_app/onlinesongs/onlinehome.dart';
 import 'package:songs_app/onlinestart.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
 bool isLoading = false;
-bool access = false;
 int globalVariable = 0;
 String book1 = 'ZION_SONGS';
 String book = '';
 List<List<String>> abgt = [];
 List<Song> songs = [];
 Map<String, dynamic> dataoflink = {};
+Map<String, dynamic> dataoflike = {};
 Song ha = Song(number: 1, text: '', etext: '', oldnum: [], genre: '', song: {});
 
 class Song {
@@ -47,22 +47,96 @@ class Song {
 }
 
 Future<void> fetchJsonFromGoogleDrive() async {
-  try {
-    const url =
-        'https://drive.google.com/uc?id=1pStQY3l45g3CA9K4sXE55t_saeusFfHe';
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      dataoflink = jsonData["songs"] as Map<String, dynamic>;
-      access = true;
-    } else {
-      access = false;
-
-      throw Exception('Failed to load JSON file');
+  const url =
+      'https://drive.google.com/uc?id=1pStQY3l45g3CA9K4sXE55t_saeusFfHe';
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    dataoflink = jsonData["songs"] as Map<String, dynamic>;
+    final box = await Hive.openBox('songDataBox');
+    var myData = box.get('songs');
+    if (myData == null) {
+      List<SongData> toadd = [];
+      List<SongData> toadd1 = [];
+      for (int i = 0; i < 867; i++) {
+        if (i < 165) {
+          toadd.add(SongData(link: '', start: 0, like: false));
+        }
+        toadd1.add(SongData(link: '', start: 0, like: false));
+      }
+      final data = {"ZION_SONGS": toadd, "HEBRON_SONGS": toadd1};
+      await box.put('songs', data);
     }
-  } catch (e) {
-    access = false;
+    Map<String, dynamic> addingtothe = {};
+    for (var i in dataoflink.keys) {
+      Map<String, dynamic> ech = dataoflink[i];
+      List<SongData> ad = [];
+      for (var k in ech.keys) {
+        int numb = int.parse(k);
+
+        Map<String, dynamic> each1 = ech[k];
+        SongData oko = myData[i][numb - 1];
+        oko.link = each1["link"].toString();
+        oko.start = each1["start"];
+        ad.add(oko);
+      }
+      addingtothe[i] = ad;
+      dataoflike[i] = ad;
+    }
+    await box.put('songs', addingtothe);
+    fetchdatafromBox();
+  } else {
+    throw Exception('Failed to load JSON file');
+  }
+}
+
+Future<void> fetchdatafromBox() async {
+  final box = await Hive.openBox('songDataBox');
+  var myData = box.get('songs');
+  List<SongData> toadd = [];
+  List<SongData> toadd1 = [];
+  if (myData == null) {
+    for (int i = 0; i < 867; i++) {
+      if (i < 165) {
+        toadd.add(SongData(link: '', start: 0, like: false));
+      }
+      toadd1.add(SongData(link: '', start: 0, like: false));
+    }
+    final data = {"ZION_SONGS": toadd, "HEBRON_SONGS": toadd1};
+    await box.put('songs', data);
+    dataoflike = {'ZION_SONGS': toadd, 'HEBRON_SONGS': toadd1};
+  } else {
+    dataoflike = {
+      'ZION_SONGS': myData['ZION_SONGS'],
+      'HEBRON_SONGS': myData['HEBRON_SONGS']
+    };
+  }
+}
+
+Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
+  final box = await Hive.openBox('songDataBox');
+  var myData = box.get('songs');
+  if (myData != null) {
+    List<dynamic> zionSongsData = myData['ZION_SONGS'];
+    List<dynamic> hebronSongsData = myData['HEBRON_SONGS'];
+    if (book1 == 'ZION_SONGS') {
+      if (torf) {
+        zionSongsData[index].like = !zionSongsData[index].like;
+      } else {
+        zionSongsData[index].link = harry.link;
+        zionSongsData[index].start = harry.start;
+      }
+    } else {
+      if (torf) {
+        hebronSongsData[index].like = !hebronSongsData[index].like;
+      } else {
+        hebronSongsData[index].link = harry.link;
+        hebronSongsData[index].start = harry.start;
+      }
+    }
+    final data = {"ZION_SONGS": zionSongsData, "HEBRON_SONGS": hebronSongsData};
+    await box.put('songs', data);
+    dataoflike = {'ZION_SONGS': zionSongsData, 'HEBRON_SONGS': hebronSongsData};
   }
 }
 
@@ -239,7 +313,7 @@ class Decorate {
         return Song.fromMap(e);
       }).toList();
     } catch (error) {
-      // ignore: use_build_context_synchronously
+      //
       AlertDialog(
         title: const Text('Error'),
         content: Text('An error occurred: $error'),

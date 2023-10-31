@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/offlinesongs/hivdb.dart';
 import 'psearch.dart';
 import 'ohome.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -20,8 +22,8 @@ class HebronSong extends StatefulWidget {
 class _HebronSongState extends State<HebronSong> {
   bool kr = false;
   bool yt = false;
-  String link = "";
-  int start = 0;
+  SongData newone = SongData(link: '', start: 0, like: false);
+
   @override
   void dispose() {
     super.dispose();
@@ -31,10 +33,6 @@ class _HebronSongState extends State<HebronSong> {
   Future<void> gtlik() async {
     await fetchJsonFromGoogleDrive();
 
-    if (dataoflink.isNotEmpty) {
-      link = dataoflink[book1][ha.number.toString()]["link"].toString();
-      start = dataoflink[book1][ha.number.toString()]["start"];
-    }
     setState(() {
       kr = true;
     });
@@ -44,15 +42,11 @@ class _HebronSongState extends State<HebronSong> {
   void initState() {
     super.initState();
     WakelockPlus.enable();
-    yt = false;
-    if (access == true) {
-      link = dataoflink[book1][ha.number.toString()]["link"].toString();
-      start = dataoflink[book1][ha.number.toString()]["start"];
+    setState(() {
+      newone = dataoflike[book1][ha.number - 1];
+      yt = false;
       kr = true;
-    } else {
-      kr = false;
-      gtlik();
-    }
+    });
   }
 
   Map? payload;
@@ -67,6 +61,8 @@ class _HebronSongState extends State<HebronSong> {
         if (payload!.isNotEmpty) {
           int intValue = int.parse(payload!['number']) - 1;
           ha = songs[intValue];
+          newone = dataoflike[book1][ha.number - 1];
+          yt = true;
         } else {
           ha = songs[0];
         }
@@ -76,6 +72,8 @@ class _HebronSongState extends State<HebronSong> {
         if (payload!.isNotEmpty) {
           int intValue = int.parse(payload!['number']) - 1;
           ha = songs[intValue];
+          newone = dataoflike[book1][ha.number - 1];
+          yt = true;
         } else {
           ha = songs[0];
         }
@@ -219,16 +217,18 @@ class _HebronSongState extends State<HebronSong> {
                   actions: [
                     IconButton(
                       onPressed: () async {
-                        if (dataoflink.isNotEmpty && link != "") {
-                          if (yt == false) {
-                            setState(() {
-                              yt = true;
-                            });
-                          } else {
-                            setState(() {
-                              yt = false;
-                            });
-                          }
+                        await updatedatafromBox(newone, ha.number - 1, true);
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.favorite,
+                          color: newone.like ? Colors.pink : Colors.grey),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        if (newone.link != "") {
+                          setState(() {
+                            yt = !yt;
+                          });
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -238,11 +238,7 @@ class _HebronSongState extends State<HebronSong> {
                         }
                       },
                       icon: Icon(yt ? Icons.stop_circle : Icons.play_circle,
-                          color: dataoflink.isNotEmpty &&
-                                  dataoflink[book1][ha.number.toString()]
-                                              ["link"]
-                                          .toString() ==
-                                      ""
+                          color: newone.link.isEmpty
                               ? Colors.grey
                               : yt
                                   ? Colors.red
@@ -272,8 +268,8 @@ class _HebronSongState extends State<HebronSong> {
                   text: ha.song,
                   yt: yt,
                   sang: ha,
-                  link: link,
-                  start: start,
+                  link: newone.link,
+                  start: newone.start,
                 ),
                 floatingActionButton: FloatingActionButton.extended(
                   onPressed: () {
@@ -422,14 +418,13 @@ class _HebronScrollableTextContainerState
                 child: Column(
                   children: widget.text.entries.map((entry) {
                     return ListTile(
-                      minLeadingWidth: 0.5,
                       leading: Text(
                         entry.key[0] == 'a' ? '' : entry.key,
                         style: TextStyle(
+                          fontWeight: FontWeight.bold,
                           fontSize: _baseFontSize *
                               _transformationController.value
                                   .getMaxScaleOnAxis(),
-                          fontWeight: FontWeight.bold,
                           color: isLoading
                               ? Colors.black
                               : const Color.fromRGBO(177, 158, 143, 1),
