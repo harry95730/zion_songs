@@ -58,16 +58,7 @@ class _MyHomePage1State extends State<MyHomePage1> {
     return Scaffold(
       floatingActionButton: Builder(
         builder: (BuildContext context) {
-          return FloatingActionButton(
-            backgroundColor: const Color.fromRGBO(177, 158, 143, 1),
-            child: const Icon(
-              Icons.menu,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
+          return Decorate().butto2(context);
         },
       ),
       drawer: Drawer(

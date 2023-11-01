@@ -304,6 +304,27 @@ class Decorate {
     );
   }
 
+  Widget butto2(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: Decorate().eachtile(),
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        height: 40,
+        width: 40,
+        child: InkWell(
+          onTap: () {
+            Scaffold.of(context).openDrawer();
+          },
+          child: const Icon(Icons.menu, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
   Future<void> fetchDataFromJsonFile() async {
     try {
       String jsonString = await rootBundle.loadString('assets/son.json');

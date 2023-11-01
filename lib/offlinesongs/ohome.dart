@@ -48,12 +48,7 @@ class _HebronPageState extends State<HebronPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
         floatingActionButton: Builder(
           builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.yellowAccent),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
+            return Decorate().butto2(context);
           },
         ),
         drawer: Drawer(
@@ -77,16 +72,6 @@ class _HebronPageState extends State<HebronPage> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.online_prediction),
-                title: const Text('Search Online'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Onlinepage()));
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
                 title: const Text(
                   'Favourites',
@@ -94,6 +79,61 @@ class _HebronPageState extends State<HebronPage> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const Fav()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.search,
+                  color: Colors.deepOrange,
+                ),
+                title: const Text('Search'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyHomePage1(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.switch_access_shortcut,
+                  color: Colors.pinkAccent,
+                ),
+                title: const Text('Alphabetical Order'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TeluguIndex(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.lyrics_outlined,
+                  color: Colors.deepPurpleAccent.shade100,
+                ),
+                title: const Text('CATEGORY'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ExpandableList(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.online_prediction),
+                title: const Text('Search Online'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Onlinepage()));
                 },
               ),
               ListTile(
