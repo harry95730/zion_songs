@@ -97,7 +97,8 @@ class _HebronPageState extends State<HebronPage> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.not_listed_location_outlined),
+                leading: Icon(Icons.not_listed_location_outlined,
+                    color: Colors.deepPurple.shade300),
                 title: const Text('App Info'),
                 onTap: () {
                   Navigator.push(

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/info.dart';
 import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/ohome.dart';
 import 'package:songs_app/offlinesongs/psearch.dart';
 import 'package:songs_app/offlinesongs/rgenre.dart';
+import 'package:songs_app/onlinestart.dart';
 import 'song.dart';
 
 class TeluguIndex extends StatefulWidget {
@@ -25,14 +28,52 @@ class _TeluguIndexState extends State<TeluguIndex> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/i12.jpg"), fit: BoxFit.cover),
-        ),
-        child: TeluguIndex1(refresh: refresh),
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/i12.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            child: TeluguIndex1(refresh: refresh),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                backgroundColor: const Color.fromRGBO(177, 158, 143, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              onPressed: () async {
+                if (book1 == 'HEBRON_SONGS') {
+                  book1 = 'ZION_SONGS';
+                } else {
+                  book1 = 'HEBRON_SONGS';
+                }
+                await Decorate().fetchDataFromJsonFile();
+                refresh();
+              },
+              child: Ink(
+                child: Text(
+                  book1 == 'ZION_SONGS' ? 'HEBRON SONGS' : 'ZION SONGS',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22.0,
+                      fontFamily: 'f1',
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromRGBO(13, 13, 13, 1),
@@ -44,7 +85,7 @@ class _TeluguIndexState extends State<TeluguIndex> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.menu_book_rounded,
+              Icons.search,
               color: Color.fromRGBO(177, 158, 143, 1),
             ),
             label: 'SEARCH',
@@ -89,30 +130,127 @@ class _TeluguIndexState extends State<TeluguIndex> {
           }
         },
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
-        onPressed: () async {
-          if (book1 == 'HEBRON_SONGS') {
-            book1 = 'ZION_SONGS';
-          } else {
-            book1 = 'HEBRON_SONGS';
-          }
-          await Decorate().fetchDataFromJsonFile();
-          refresh();
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            backgroundColor: const Color.fromRGBO(177, 158, 143, 1),
+            child: const Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
         },
-        child: Ink(
-          child: Text(
-            book1 == 'ZION_SONGS' ? 'HEBRON SONGS' : 'ZION SONGS',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 22.0,
-                fontFamily: 'f1',
-                fontWeight: FontWeight.bold),
-          ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Colors.black,
+                Colors.pinkAccent,
+              ])),
+              accountName: Text('ZION SONGS'),
+              accountEmail: SelectableText(
+                'zionhouseofprayer497@gmail.com',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/s.png'),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+                color: Colors.tealAccent,
+              ),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HebronPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.online_prediction),
+              title: const Text('Search Online'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Onlinepage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
+              title: const Text(
+                'Favourites',
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Fav()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.search,
+                color: Colors.deepOrange,
+              ),
+              title: const Text('Search'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyHomePage1(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.lyrics_outlined,
+                color: Colors.deepPurpleAccent.shade100,
+              ),
+              title: const Text('CATEGORY'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ExpandableList(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.not_listed_location_outlined,
+              ),
+              title: const Text('App Info'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SecondPage()));
+              },
+            ),
+            ListTile(
+              leading:
+                  const Icon(Icons.share_outlined, color: Colors.blueAccent),
+              title: const Text('Share App'),
+              onTap: () {
+                Share.share(
+                    "https;//play.google.com/stote/appsdetails?id=com,instructivetech.testapp");
+              },
+            ),
+          ],
         ),
       ),
     );
