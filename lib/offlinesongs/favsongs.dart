@@ -80,16 +80,6 @@ class _FavState extends State<Fav> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
-              title: const Text(
-                'Favourites',
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Fav()));
-              },
-            ),
-            ListTile(
               leading: const Icon(
                 Icons.search,
                 color: Colors.deepOrange,
@@ -105,9 +95,9 @@ class _FavState extends State<Fav> {
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.switch_access_shortcut,
-                color: Colors.amberAccent.shade200,
+                color: Colors.pinkAccent,
               ),
               title: const Text('Alphabetical Order'),
               onTap: () {
@@ -326,7 +316,7 @@ class _FavState extends State<Fav> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.menu_book_rounded,
+              Icons.search,
               color: Color.fromRGBO(177, 158, 143, 1),
             ),
             label: 'SEARCH',

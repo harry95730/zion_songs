@@ -106,16 +106,6 @@ class _MyHomePage1State extends State<MyHomePage1> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.online_prediction),
-              title: const Text('Search Online'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Onlinepage()));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
               title: const Text(
                 'Favourites',
@@ -153,6 +143,16 @@ class _MyHomePage1State extends State<MyHomePage1> {
                     builder: (context) => const ExpandableList(),
                   ),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.online_prediction),
+              title: const Text('Search Online'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Onlinepage()));
               },
             ),
             ListTile(

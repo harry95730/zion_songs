@@ -180,16 +180,6 @@ class _TeluguIndexState extends State<TeluguIndex> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.online_prediction),
-              title: const Text('Search Online'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Onlinepage()));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
               title: const Text(
                 'Favourites',
@@ -227,6 +217,16 @@ class _TeluguIndexState extends State<TeluguIndex> {
                     builder: (context) => const ExpandableList(),
                   ),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.online_prediction),
+              title: const Text('Search Online'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Onlinepage()));
               },
             ),
             ListTile(
