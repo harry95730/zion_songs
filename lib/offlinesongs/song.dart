@@ -447,9 +447,10 @@ class _HebronScrollableTextContainerState
                                                   196, 25, 18, 90)
                                               : Colors.black
                                           : isEven
-                                              ? Colors.limeAccent
+                                              ? const Color.fromRGBO(
+                                                  177, 158, 143, 1)
                                               : const Color.fromRGBO(
-                                                  177, 158, 143, 1),
+                                                  102, 255, 255, 0.9),
                                     ),
                                   ),
                                 ),
@@ -470,7 +471,8 @@ class _HebronScrollableTextContainerState
                                               196, 25, 18, 90)
                                           : Colors.black
                                       : isEven
-                                          ? Colors.limeAccent
+                                          ? const Color.fromRGBO(
+                                              102, 255, 255, 0.9)
                                           : const Color.fromRGBO(
                                               177, 158, 143, 1),
                                 ),

@@ -42,16 +42,8 @@ class _TeluguIndexState extends State<TeluguIndex> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                backgroundColor: const Color.fromRGBO(177, 158, 143, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              onPressed: () async {
+            child: InkWell(
+              onTap: () async {
                 if (book1 == 'HEBRON_SONGS') {
                   book1 = 'ZION_SONGS';
                 } else {
@@ -60,15 +52,31 @@ class _TeluguIndexState extends State<TeluguIndex> {
                 await Decorate().fetchDataFromJsonFile();
                 refresh();
               },
-              child: Ink(
-                child: Text(
-                  book1 == 'ZION_SONGS' ? 'HEBRON SONGS' : 'ZION SONGS',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22.0,
-                      fontFamily: 'f1',
-                      fontWeight: FontWeight.bold),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 255, 255, 255),
+                      Color.fromRGBO(102, 255, 255, 0.8),
+                    ],
+                  ),
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0, vertical: 2.0),
+                  child: Text(
+                    book1 == 'ZION_SONGS' ? 'HEBRON' : 'ZION',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 22.0,
+                        fontFamily: 'f1',
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
