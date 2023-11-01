@@ -53,7 +53,7 @@ class _OnlinepageState extends State<Onlinepage> {
               ),
               child: Listofbooks(onlinelist: x),
             )
-          : const CircularProgressIndicator(),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

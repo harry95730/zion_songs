@@ -82,8 +82,8 @@ class SecondPage extends StatelessWidget {
                     style: TextStyle(
                       shadows: [
                         Shadow(
-                          blurRadius: 10.0, // shadow blur
-                          color: Color.fromARGB(255, 0, 0, 0), // shadow color
+                          blurRadius: 10.0,
+                          color: Color.fromARGB(255, 0, 0, 0),
                           offset: Offset(5.0, 5.0),
                         ),
                       ],
@@ -99,8 +99,8 @@ class SecondPage extends StatelessWidget {
                     style: TextStyle(
                       shadows: [
                         Shadow(
-                          blurRadius: 10.0, // shadow blur
-                          color: Color.fromARGB(255, 0, 0, 0), // shadow color
+                          blurRadius: 10.0,
+                          color: Color.fromARGB(255, 0, 0, 0),
                           offset: Offset(5.0, 5.0),
                         ),
                       ],

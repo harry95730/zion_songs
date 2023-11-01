@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:songs_app/classoffunc/classes.dart';
@@ -414,39 +413,50 @@ class _HebronScrollableTextContainerState
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Column(
-                  children: widget.text.entries.map((entry) {
-                    return ListTile(
-                      leading: Text(
-                        entry.key[0] == 'a' ? '' : entry.key,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: _baseFontSize *
-                              _transformationController.value
-                                  .getMaxScaleOnAxis(),
-                          color: isLoading
-                              ? Colors.black
-                              : const Color.fromRGBO(177, 158, 143, 1),
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: widget.text.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final entry = widget.text.entries.elementAt(index);
+                      final isEven = index % 2 == 0;
+
+                      return ListTile(
+                        leading: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              entry.key[0] == 'a' ? '' : entry.key,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isLoading
+                                    ? Colors.black
+                                    : const Color.fromRGBO(177, 158, 143, 1),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      title: Text(
-                        entry.value.toString(),
-                        softWrap: true,
-                        style: TextStyle(
-                          fontSize: _baseFontSize *
-                              _transformationController.value
-                                  .getMaxScaleOnAxis(),
-                          fontWeight: FontWeight.bold,
-                          color: isLoading
-                              ? Colors.black
-                              : const Color.fromRGBO(177, 158, 143, 1),
+                        title: SelectableText(
+                          entry.value.toString(),
+                          style: TextStyle(
+                            fontSize: _baseFontSize *
+                                _transformationController.value
+                                    .getMaxScaleOnAxis(),
+                            fontWeight: FontWeight.bold,
+                            color: isLoading
+                                ? isEven
+                                    ? Colors.black
+                                    : Colors.indigoAccent
+                                : isEven
+                                    ? const Color.fromRGBO(177, 158, 143, 1)
+                                    : Colors.limeAccent,
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                      );
+                    },
+                  )),
             ]),
           ),
         ],

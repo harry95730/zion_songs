@@ -1,6 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/onlinestart.dart';
 import 'rgenre.dart';
 import 'psearch.dart';
@@ -26,9 +28,7 @@ class _HebronPageState extends State<HebronPage> {
   @override
   void initState() {
     super.initState();
-
     ca();
-
     setState(() {
       isLoad = false;
     });
@@ -45,6 +45,79 @@ class _HebronPageState extends State<HebronPage> {
       );
     } else {
       return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
+        floatingActionButton: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.yellowAccent),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              const UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Colors.black,
+                  Colors.pinkAccent,
+                ])),
+                accountName: Text('ZION SONGS'),
+                accountEmail: SelectableText(
+                  'zionhouseofprayer497@gmail.com',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/s.png'),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.online_prediction),
+                title: const Text('Search Online'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Onlinepage()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
+                title: const Text(
+                  'Favourites',
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Fav()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.not_listed_location_outlined),
+                title: const Text('App Info'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SecondPage()));
+                },
+              ),
+              ListTile(
+                leading:
+                    const Icon(Icons.share_outlined, color: Colors.blueAccent),
+                title: const Text('Share App'),
+                onTap: () {
+                  Share.share(
+                      "https;//play.google.com/stote/appsdetails?id=com,instructivetech.testapp");
+                },
+              ),
+            ],
+          ),
+        ),
         body: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -65,8 +138,8 @@ class _HebronPageState extends State<HebronPage> {
                   style: const TextStyle(
                     shadows: [
                       Shadow(
-                        blurRadius: 10.0, // shadow blur
-                        color: Color.fromARGB(255, 0, 0, 0), // shadow color
+                        blurRadius: 10.0,
+                        color: Color.fromARGB(255, 0, 0, 0),
                         offset: Offset(5.0, 5.0),
                       ),
                     ],
@@ -156,8 +229,6 @@ class _HebronPageState extends State<HebronPage> {
                       Icons.switch_access_shortcut, context),
                   Decorate().butto1(const ExpandableList(), 'CATEGORY',
                       Icons.lyrics_outlined, context),
-                  Decorate().butto1(const SecondPage(), 'APP INFO',
-                      Icons.not_listed_location_outlined, context),
                 ],
               ),
               const Padding(padding: EdgeInsets.only(bottom: 50)),
@@ -199,9 +270,6 @@ class _HebronPageState extends State<HebronPage> {
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Decorate()
-            .butto(const Onlinepage(), 'SEARCH ONLINE', 22.0, 'f1', context),
       );
     }
   }
