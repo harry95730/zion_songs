@@ -422,37 +422,61 @@ class _HebronScrollableTextContainerState
                       final entry = widget.text.entries.elementAt(index);
                       final isEven = index % 2 == 0;
 
-                      return ListTile(
-                        leading: Column(
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              entry.key[0] == 'a' ? '' : entry.key,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isLoading
-                                    ? Colors.black
-                                    : const Color.fromRGBO(177, 158, 143, 1),
+                            Expanded(
+                              flex: entry.key == 'పల్లవి:' ||
+                                      entry.key == 'అ||ప||:'
+                                  ? 2
+                                  : 1,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child: Text(
+                                    entry.key[0] == 'a' ? '' : entry.key,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: isLoading
+                                          ? isEven
+                                              ? const Color.fromARGB(
+                                                  196, 25, 18, 90)
+                                              : Colors.black
+                                          : isEven
+                                              ? Colors.limeAccent
+                                              : const Color.fromRGBO(
+                                                  177, 158, 143, 1),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 10,
+                              child: SelectableText(
+                                entry.value.toString(),
+                                style: TextStyle(
+                                  fontSize: _baseFontSize *
+                                      _transformationController.value
+                                          .getMaxScaleOnAxis(),
+                                  fontWeight: FontWeight.bold,
+                                  color: isLoading
+                                      ? isEven
+                                          ? const Color.fromARGB(
+                                              196, 25, 18, 90)
+                                          : Colors.black
+                                      : isEven
+                                          ? Colors.limeAccent
+                                          : const Color.fromRGBO(
+                                              177, 158, 143, 1),
+                                ),
                               ),
                             ),
                           ],
-                        ),
-                        title: SelectableText(
-                          entry.value.toString(),
-                          style: TextStyle(
-                            fontSize: _baseFontSize *
-                                _transformationController.value
-                                    .getMaxScaleOnAxis(),
-                            fontWeight: FontWeight.bold,
-                            color: isLoading
-                                ? isEven
-                                    ? Colors.black
-                                    : Colors.indigoAccent
-                                : isEven
-                                    ? const Color.fromRGBO(177, 158, 143, 1)
-                                    : Colors.limeAccent,
-                          ),
                         ),
                       );
                     },
