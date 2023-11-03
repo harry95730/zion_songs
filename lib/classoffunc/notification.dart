@@ -22,6 +22,7 @@ class PushNotifications {
     );
     // get the device fcm token
     final token = await _firebaseMessaging.getToken();
+
     print("device token: $token");
   }
 

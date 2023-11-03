@@ -16,14 +16,14 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
   PushNotifications.init();
   PushNotifications.localNotiInit();
   await Hive.initFlutter();
   Hive.registerAdapter(SongDataAdapter());
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    foregroundMessageHandler(message);
     String payloadData = jsonEncode(message.data);
     if (message.notification != null) {
       PushNotifications.showSimpleNotification(
@@ -44,7 +44,65 @@ void main() async {
       await navigatorKey.currentState!.pushNamed("/song", arguments: message);
     }
   });
+
   runApp(const MyApp());
+}
+
+Future<void> foregroundMessageHandler(RemoteMessage message) async {
+  if (message.data.isNotEmpty) {
+    DateTime now = DateTime.now();
+    String timed = "${now.day}-${now.month}-${now.year}";
+    final box = await Hive.openBox('songDataBox');
+    var myData = box.get('songoftheday');
+    String songbok = message.data['book'].toString();
+    int intValue = int.parse(message.data['number']) - 1;
+    int number = intValue;
+    String? notificationText = message.notification?.body;
+    Map<String, dynamic> dat = {
+      'book': songbok,
+      'number': number,
+      'title': notificationText
+    };
+    myData ??= {};
+    myData[timed] = dat;
+    sondat.clear();
+    for (var i in myData.keys) {
+      sondat.add({i: myData[i]});
+    }
+    await box.put('songoftheday', myData);
+    await box.close();
+  }
+}
+
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  if (message.data.isNotEmpty) {
+    if (!Hive.isBoxOpen('songDataBox')) {
+      await Hive.initFlutter();
+    }
+
+    final myModelAdapter = SongDataAdapter();
+    if (!Hive.isAdapterRegistered(myModelAdapter.typeId)) {
+      Hive.registerAdapter(myModelAdapter);
+    }
+    DateTime now = DateTime.now();
+    String timed = "${now.day}-${now.month}-${now.year}";
+    final box = await Hive.openBox('songDataBox');
+    var myData = box.get('songoftheday');
+    String songbok = message.data['book'].toString();
+    int intValue = int.parse(message.data['number']) - 1;
+    int number = intValue;
+    String? notificationText = message.notification?.body;
+
+    Map<String, dynamic> dat = {
+      'book': songbok,
+      'number': number,
+      'title': notificationText
+    };
+    myData ??= {};
+    myData[timed] = dat;
+    await box.put('songoftheday', myData);
+    await box.close();
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -76,6 +134,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
     ca();
   }
 

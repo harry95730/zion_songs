@@ -6,6 +6,7 @@ import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
 import 'package:songs_app/offlinesongs/rgenre.dart';
 import 'package:songs_app/onlinestart.dart';
+import 'package:songs_app/opensongoftheday.dart';
 import 'ohome.dart';
 import 'song.dart';
 
@@ -104,6 +105,18 @@ class _MyHomePage1State extends State<MyHomePage1> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Fav()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.queue_music, color: Colors.blue.shade100),
+              title: const Text(
+                'Song of the day',
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Songoftheday()));
               },
             ),
             ListTile(

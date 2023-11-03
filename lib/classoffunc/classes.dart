@@ -13,6 +13,7 @@ bool isLoading = false;
 int globalVariable = 0;
 String book1 = 'ZION_SONGS';
 String book = '';
+List<Map> sondat = [];
 List<List<String>> abgt = [];
 List<Song> songs = [];
 Map<String, dynamic> dataoflink = {};
@@ -85,6 +86,7 @@ Future<void> fetchJsonFromGoogleDrive() async {
     }
     await box.put('songs', addingtothe);
     fetchdatafromBox();
+    await box.close();
   } else {
     throw Exception('Failed to load JSON file');
   }
@@ -111,6 +113,15 @@ Future<void> fetchdatafromBox() async {
       'HEBRON_SONGS': myData['HEBRON_SONGS']
     };
   }
+
+  var myData1 = box.get('songoftheday');
+  if (myData1 != null) {
+    sondat.clear();
+    for (var i in myData1.keys) {
+      sondat.add({i: myData1[i]});
+    }
+  }
+  await box.close();
 }
 
 Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
@@ -138,6 +149,7 @@ Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
     await box.put('songs', data);
     dataoflike = {'ZION_SONGS': zionSongsData, 'HEBRON_SONGS': hebronSongsData};
   }
+  await box.close();
 }
 
 class Decorate {

@@ -7,6 +7,7 @@ import 'package:songs_app/offlinesongs/psearch.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
 import 'package:songs_app/offlinesongs/rgenre.dart';
 import 'package:songs_app/onlinestart.dart';
+import 'package:songs_app/opensongoftheday.dart';
 import 'song.dart';
 
 class Fav extends StatefulWidget {
@@ -77,6 +78,18 @@ class _FavState extends State<Fav> {
                     builder: (context) => const HebronPage(),
                   ),
                 );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.queue_music, color: Colors.blue.shade100),
+              title: const Text(
+                'Song of the day',
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Songoftheday()));
               },
             ),
             ListTile(
