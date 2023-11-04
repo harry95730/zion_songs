@@ -14,6 +14,8 @@ int globalVariable = 0;
 String book1 = 'ZION_SONGS';
 String book = '';
 List<Map> sondat = [];
+List<Map> songhis = [];
+List<List<dynamic>> songhis1 = [];
 List<List<String>> abgt = [];
 List<Song> songs = [];
 Map<String, dynamic> dataoflink = {};
@@ -121,6 +123,13 @@ Future<void> fetchdatafromBox() async {
       sondat.add({i: myData1[i]});
     }
   }
+  var myData2 = box.get('historyoftheapp');
+  if (myData2 != null) {
+    for (var i in myData2.keys) {
+      DateTime dateTime = DateTime.parse(i.toString());
+      songhis1.add([dateTime, myData2[i]]);
+    }
+  }
   await box.close();
 }
 
@@ -150,6 +159,24 @@ Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
     dataoflike = {'ZION_SONGS': zionSongsData, 'HEBRON_SONGS': hebronSongsData};
   }
   await box.close();
+}
+
+Future<void> updatehistory(Song ab) async {
+  final box = await Hive.openBox('songDataBox');
+  var myData = box.get('historyoftheapp');
+
+  DateTime now = DateTime.now();
+  int number = ab.number - 1;
+  String? notificationText = ab.text.isNotEmpty ? ab.text : ab.etext;
+  Map<String, dynamic> dat = {
+    'book': book1,
+    'number': number,
+    'title': notificationText
+  };
+  myData ??= {};
+  myData[now] = dat;
+  songhis1.add([now, dat]);
+  await box.put('historyoftheapp', myData);
 }
 
 class Decorate {

@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hive/hive.dart';
 import 'package:songs_app/classoffunc/classes.dart';
 import 'package:songs_app/offlinesongs/hivdb.dart';
 import 'psearch.dart';
@@ -32,32 +31,9 @@ class _HebronSongState extends State<HebronSong> {
 
   Future<void> gtlik() async {
     await fetchJsonFromGoogleDrive();
-
     setState(() {
       kr = true;
     });
-  }
-
-  Future<void> newf() async {
-    DateTime now = DateTime.now();
-    String timed = "${now.day}-${now.month}-${now.year}";
-    final box = await Hive.openBox('songDataBox');
-    var myData = box.get('historyoftheapp');
-    String songbok = '';
-    songbok += book1;
-
-    int number = ha.number - 1;
-    String? notificationText = ha.text.isNotEmpty ? ha.text : ha.etext;
-
-    Map<String, dynamic> dat = {
-      'book': songbok,
-      'number': number,
-      'title': notificationText
-    };
-    myData ??= {};
-    myData[timed] = dat;
-    await box.put('historyoftheapp', myData);
-    await box.close();
   }
 
   @override
@@ -69,7 +45,7 @@ class _HebronSongState extends State<HebronSong> {
       newone = dataoflike[book1][ha.number - 1];
       yt = false;
       kr = true;
-      newf();
+      updatehistory(ha);
     });
   }
 

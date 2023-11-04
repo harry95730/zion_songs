@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/classoffunc/classes.dart';
+import 'package:songs_app/history.dart';
 import 'package:songs_app/info.dart';
 import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
@@ -139,7 +140,7 @@ class _MyHomePage1State extends State<MyHomePage1> {
                 Icons.lyrics_outlined,
                 color: Colors.deepPurpleAccent.shade100,
               ),
-              title: const Text('CATEGORY'),
+              title: const Text('Category'),
               onTap: () {
                 Navigator.pushReplacement(
                   context,
@@ -147,6 +148,16 @@ class _MyHomePage1State extends State<MyHomePage1> {
                     builder: (context) => const ExpandableList(),
                   ),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history, color: Colors.black),
+              title: const Text(
+                'history',
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const History()));
               },
             ),
             ListTile(

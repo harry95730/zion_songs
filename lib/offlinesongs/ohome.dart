@@ -129,7 +129,7 @@ class _HebronPageState extends State<HebronPage> {
                   Icons.lyrics_outlined,
                   color: Colors.deepPurpleAccent.shade100,
                 ),
-                title: const Text('CATEGORY'),
+                title: const Text('Category'),
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
@@ -140,9 +140,9 @@ class _HebronPageState extends State<HebronPage> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.history, color: Colors.blue.shade100),
+                leading: const Icon(Icons.history, color: Colors.black),
                 title: const Text(
-                  'HISTORY',
+                  'history',
                 ),
                 onTap: () {
                   Navigator.push(context,

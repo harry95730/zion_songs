@@ -21,18 +21,8 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  List<Map> songhis = [];
-  List<List<dynamic>> songhis1 = [];
   Future<void> functi() async {
-    final box = await Hive.openBox('songDataBox');
-    var myData = box.get('historyoftheapp');
-    if (myData != null) {
-      for (var i in myData.keys) {
-        DateTime dateTime = DateTime.parse(i.toString());
-        songhis1.add([dateTime, myData[i]]);
-      }
-      songhis1.sort((a, b) => a[0].compareTo(b[0]));
-    }
+    songhis1.sort((a, b) => b[0].compareTo(a[0]));
   }
 
   @override
@@ -180,7 +170,7 @@ class _HistoryState extends State<History> {
                   Icons.lyrics_outlined,
                   color: Colors.deepPurpleAccent.shade100,
                 ),
-                title: const Text('CATEGORY'),
+                title: const Text('Category'),
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
@@ -223,11 +213,14 @@ class _HistoryState extends State<History> {
             ],
           ),
         ),
-        body: songhis.isNotEmpty
+        body: songhis1.isNotEmpty
             ? ListView.builder(
                 itemCount: songhis1.length,
                 itemBuilder: (context, index) {
                   final Map son = songhis1[index][1];
+
+                  DateTime dateTime =
+                      DateTime.parse(songhis1[index][0].toString());
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -259,8 +252,10 @@ class _HistoryState extends State<History> {
                           child: ListTile(
                             title: Text(
                               son['title'].toString(),
+                              maxLines: 1,
                             ),
-                            trailing: Text(songhis1[index][0].toString()),
+                            trailing: Text(
+                                "${dateTime.hour}:${dateTime.minute}:${dateTime.second}  ${dateTime.day}/${dateTime.month}"),
                           ),
                         )),
                   );

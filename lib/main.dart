@@ -100,6 +100,11 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
     };
     myData ??= {};
     myData[timed] = dat;
+    for (int i = 0; i < sondat.length; i++) {
+      if (sondat[i].containsKey(timed)) {
+        sondat[i]["timed"] = dat;
+      }
+    }
     await box.put('songoftheday', myData);
     await box.close();
   }
