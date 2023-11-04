@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:songs_app/classoffunc/classes.dart';
 import 'package:songs_app/classoffunc/notification.dart';
-import 'package:songs_app/loadingpage.dart';
+import 'package:songs_app/offlinesongs/loadingpage.dart';
 import 'package:songs_app/offlinesongs/hivdb.dart';
 import 'package:songs_app/offlinesongs/psearch.dart';
 import 'package:songs_app/offlinesongs/song.dart';

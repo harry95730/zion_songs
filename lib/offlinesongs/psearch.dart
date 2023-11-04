@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/classoffunc/classes.dart';
-import 'package:songs_app/history.dart';
+import 'package:songs_app/offlinesongs/history.dart';
 import 'package:songs_app/info.dart';
 import 'package:songs_app/offlinesongs/favsongs.dart';
 import 'package:songs_app/offlinesongs/qtelugu.dart';
 import 'package:songs_app/offlinesongs/rgenre.dart';
 import 'package:songs_app/onlinestart.dart';
-import 'package:songs_app/opensongoftheday.dart';
+import 'package:songs_app/offlinesongs/opensongoftheday.dart';
 import 'ohome.dart';
 import 'song.dart';
 
