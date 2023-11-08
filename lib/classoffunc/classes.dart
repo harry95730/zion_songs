@@ -140,6 +140,8 @@ Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
     if (book1 == 'ZION_SONGS') {
       if (torf) {
         zionSongsData[index].like = !zionSongsData[index].like;
+        SongData newone = dataoflike[book1][index];
+        newone.like = !newone.like;
       } else {
         zionSongsData[index].link = harry.link;
         zionSongsData[index].start = harry.start;
@@ -147,6 +149,8 @@ Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
     } else {
       if (torf) {
         hebronSongsData[index].like = !hebronSongsData[index].like;
+        SongData newone = dataoflike[book1][index];
+        newone.like = !newone.like;
       } else {
         hebronSongsData[index].link = harry.link;
         hebronSongsData[index].start = harry.start;
@@ -154,7 +158,6 @@ Future<void> updatedatafromBox(SongData harry, int index, bool torf) async {
     }
     final data = {"ZION_SONGS": zionSongsData, "HEBRON_SONGS": hebronSongsData};
     await box.put('songs', data);
-    dataoflike = {'ZION_SONGS': zionSongsData, 'HEBRON_SONGS': hebronSongsData};
   }
   await box.close();
 }
