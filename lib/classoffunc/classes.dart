@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/offlinesongs/hivdb.dart';
-import 'package:songs_app/offlinesongs/ohome.dart';
-import 'package:songs_app/onlinesongs/onlinehome.dart';
-import 'package:songs_app/onlinestart.dart';
+import 'package:songs_app/onlinesongs/onhome.dart';
 import 'package:http/http.dart' as http;
 
 bool isLoading = false;
@@ -187,7 +185,7 @@ class Decorate {
       elevation: 2,
       unselectedLabelStyle: const TextStyle(color: Colors.white),
       unselectedItemColor: const Color.fromRGBO(251, 250, 250, 1),
-      currentIndex: 2,
+      currentIndex: 1,
       showSelectedLabels: false,
       items: [
         BottomNavigationBarItem(
@@ -197,26 +195,12 @@ class Decorate {
           ),
           label: a1,
         ),
-        BottomNavigationBarItem(
-          icon: const Icon(
-            Icons.offline_bolt,
-            color: Color.fromRGBO(177, 158, 143, 1),
-          ),
-          label: book1 == 'ZION_SONGS' ? 'HEBRON' : 'ZION',
-        ),
         const BottomNavigationBarItem(
           icon: Icon(
             Icons.home,
             color: Color.fromRGBO(177, 158, 143, 1),
           ),
           label: 'abc',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(
-            Icons.flash_on_outlined,
-            color: Color.fromRGBO(177, 158, 143, 1),
-          ),
-          label: 'OTHER',
         ),
         BottomNavigationBarItem(
           icon: Icon(
@@ -238,24 +222,10 @@ class Decorate {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const HebronPage(),
-            ),
-          );
-        } else if (index == 2) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
               builder: (context) => const Onlinehome(),
             ),
           );
-        } else if (index == 3) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Onlinepage(),
-            ),
-          );
-        } else if (index == 4) {
+        } else if (index == 2) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

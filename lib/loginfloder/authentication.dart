@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -55,36 +59,65 @@ class AuthService {
     }
   }
 
-  Future<User?> registerUser1(String email, String password, String displayName,
-      String pin, String verse, String chruchinfo, BuildContext context) async {
+  Future<User?> registerUser1(
+      String email,
+      String password,
+      String displayName,
+      String pin,
+      String verse,
+      String chruchinfo,
+      File? file,
+      BuildContext context) async {
     try {
+      String newname = '';
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      await FirebaseFirestore.instance
-          .collection('all songs')
-          .doc(userCredential.user!.uid)
-          .set({
-        'display name': displayName,
-        'verse': verse,
-        'pin': pin,
-        'chruch': chruchinfo,
-        'number': 0
-      });
-      await FirebaseFirestore.instance
-          .collection('all songs')
-          .doc(userCredential.user!.uid)
-          .collection('songs')
-          .doc('song0')
-          .set({
-        'title': "",
-        'english': "",
-        "number": '',
-        "old number": [],
-        "song": {},
-      });
+      if (file != null) {
+        try {
+          if (file.path.endsWith('jpg')) {
+            newname = '$displayName.jpg';
+          } else if (file.path.endsWith('png')) {
+            newname = '$displayName.png';
+          }
+
+          Reference storageReference =
+              FirebaseStorage.instance.ref().child(newname);
+          UploadTask uploadTask = storageReference.putFile(file);
+          await uploadTask;
+          await FirebaseFirestore.instance
+              .collection('all songs')
+              .doc(userCredential.user!.uid)
+              .set({
+            'display name': displayName,
+            'verse': verse,
+            'pin': pin,
+            'chruch': chruchinfo,
+            'number': 0,
+            'image': newname
+          });
+          await FirebaseFirestore.instance
+              .collection('all songs')
+              .doc(userCredential.user!.uid)
+              .collection('songs')
+              .doc('song0')
+              .set({
+            'title': "",
+            'english': "",
+            "number": '',
+            "old number": [],
+            "song": {},
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ));
+        }
+      }
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

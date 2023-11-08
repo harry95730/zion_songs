@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:songs_app/classoffunc/extractdata.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:songs_app/classoffunc/classes.dart';
-import 'onlinepsearch.dart';
-import 'onlinehome.dart';
+import 'onpsearch.dart';
+import 'onhome.dart';
 
 class Onlinedisplaysong extends StatefulWidget {
   const Onlinedisplaysong({super.key, required this.searchResult});
@@ -18,7 +19,7 @@ class _OnlinedisplaysongState extends State<Onlinedisplaysong> {
   bool isLoading = true;
   bool yt = false;
   bool _vro = false;
-  Map<String, String> mapLis = {};
+  List map = [];
   // ignore: prefer_typing_uninitialized_variables
   var data1;
   @override
@@ -31,10 +32,21 @@ class _OnlinedisplaysongState extends State<Onlinedisplaysong> {
   }
 
   void fre() async {
-    mapLis = await Dat().songrequ(book, widget.searchResult[0], context);
+    map = await Dat().songrequ(book, widget.searchResult[0], context);
     setState(() {
       _vro = true;
     });
+  }
+
+  void _shareDictionaryData(List dictionaryData) {
+    String sharedText = '';
+    for (int i = 0; i < dictionaryData.length; i++) {
+      Map xf = dictionaryData[i];
+      for (var j in xf.keys) {
+        sharedText += "$j.  ${xf[j]}\n\n";
+      }
+    }
+    Share.share(sharedText);
   }
 
   Future<void> darkorlight() async {
@@ -195,7 +207,7 @@ class _OnlinedisplaysongState extends State<Onlinedisplaysong> {
                 setState(() {
                   WakelockPlus.disable();
                 });
-                Decorate().fre(mapLis);
+                _shareDictionaryData(map);
               },
               icon: const Icon(Icons.share, color: Colors.black),
             ),
@@ -218,7 +230,7 @@ class _OnlinedisplaysongState extends State<Onlinedisplaysong> {
             ? OnlineScroll(
                 b: isLoading,
                 yt: yt,
-                text: mapLis,
+                text: map,
                 si: widget.searchResult,
               )
             : const Center(child: CircularProgressIndicator()),
@@ -250,7 +262,7 @@ class OnlineScroll extends StatefulWidget {
   final List<String> si;
   final bool b;
   final bool yt;
-  final Map<String, String> text;
+  final List text;
   const OnlineScroll({
     super.key,
     required this.b,
@@ -264,9 +276,7 @@ class OnlineScroll extends StatefulWidget {
 }
 
 class _OnlineScrollState extends State<OnlineScroll> {
-  final TransformationController _transformationController =
-      TransformationController();
-  final double _baseFontSize = 20.0;
+  int count = 0;
   late List<dynamic> num = [];
 
   @override
@@ -346,41 +356,40 @@ class _OnlineScrollState extends State<OnlineScroll> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                children: widget.text.entries.map((entry) {
-                  return ListTile(
-                    dense: true,
-                    minLeadingWidth: 1.0,
-                    selectedColor: Colors.lightBlue,
-                    leading: Text(
-                      entry.key[0] == 'a' ? '' : entry.key,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: _baseFontSize *
-                            _transformationController.value.getMaxScaleOnAxis(),
-                        fontWeight: FontWeight.bold,
-                        color: widget.b
-                            ? Colors.black
-                            : const Color.fromRGBO(177, 158, 143, 1),
-                      ),
-                    ),
-                    title: Text(
-                      entry.value.toString(),
-                      softWrap: true,
-                      style: TextStyle(
-                        fontSize: _baseFontSize *
-                            _transformationController.value.getMaxScaleOnAxis(),
-                        fontWeight: FontWeight.bold,
-                        color: widget.b
-                            ? Colors.black
-                            : const Color.fromRGBO(177, 158, 143, 1),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+            Expanded(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: widget.text.length,
+                  itemBuilder: (context, index) {
+                    Map item = widget.text[index];
+                    List keys = item.keys.toList();
+                    if (index == 0) {
+                      count = 0;
+                    }
+                    if (keys[0] != "పల్లవి" && keys[0] != "అనుపల్లవి") {
+                      count++;
+                    }
+                    return ListTile(
+                        title: Row(
+                      children: [
+                        Expanded(
+                            flex: keys[0] == "పల్లవి" || keys[0] == "అనుపల్లవి"
+                                ? 2
+                                : 1,
+                            child: keys[0] == "పల్లవి"
+                                ? Text(keys[0])
+                                : keys[0] == "అనుపల్లవి"
+                                    ? const Text("అ||ప||")
+                                    : Text('$count')),
+                        Expanded(
+                            flex: keys[0] == "పల్లవి" || keys[0] == "అనుపల్లవి"
+                                ? 10
+                                : 10,
+                            child: Text(item[keys[0]])),
+                      ],
+                    ));
+                  }),
             ),
           ]),
         ),

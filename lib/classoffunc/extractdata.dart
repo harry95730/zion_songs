@@ -1,11 +1,36 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+String imageUrl = '';
+
 class Dat {
+  Future<List<List<String>>> dataread(BuildContext context) async {
+    late List<List<String>> abc = [];
+    try {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('all songs');
+      QuerySnapshot querySnapshot = await users.get();
+      for (var doc in querySnapshot.docs) {
+        //print(doc.data());
+        List<String> sd = [
+          doc['display name'].toString(),
+          doc['pin'].toString(),
+          doc.id.toString()
+        ];
+        abc.add(sd);
+      }
+      return abc;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+        backgroundColor: Colors.red,
+      ));
+    }
+    return abc;
+  }
+
   Future<List<List<String>>> displaySubcollectionTitles(
       String userid, BuildContext context) async {
     try {
@@ -15,6 +40,14 @@ class Dat {
           .doc(userid)
           .collection('songs');
 
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('all songs')
+          .doc(userid)
+          .get();
+      if (documentSnapshot.exists) {
+        String fieldValue = documentSnapshot['image'];
+        await downloadImage(fieldValue, context);
+      }
       final mainCollectionSnapshot = await mainCollectionRef.get();
 
       for (final mainDoc in mainCollectionSnapshot.docs) {
@@ -27,7 +60,6 @@ class Dat {
             mainDoc['number'],
             mainDoc['genre']
           ];
-
           abc.add(def);
         }
       }
@@ -41,10 +73,23 @@ class Dat {
     return [[]];
   }
 
-  Future<Map<String, String>> songrequ(
+  Future<void> downloadImage(String fieldval, BuildContext context) async {
+    try {
+      final FirebaseStorage storage = FirebaseStorage.instance;
+      Reference imageRef = storage.ref().child(fieldval);
+      final String downloadURL = await imageRef.getDownloadURL();
+      imageUrl = downloadURL;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  Future<List> songrequ(
       String userid, String songid, BuildContext context) async {
     try {
-      late Map<String, String> abc = {};
       final mainCollectionRef = FirebaseFirestore.instance
           .collection('all songs')
           .doc(userid)
@@ -52,20 +97,16 @@ class Dat {
           .doc(songid);
 
       final mainCollectionSnapshot = await mainCollectionRef.get();
-      LinkedHashMap<String, dynamic>? songsList =
-          mainCollectionSnapshot['song'] as LinkedHashMap<String, dynamic>;
-      //print(songsList);
-      for (var song in songsList.keys) {
-        abc[song] = songsList[song].toString();
-      }
-      return abc;
+      List songsList = mainCollectionSnapshot['song'];
+
+      return songsList;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
         backgroundColor: Colors.red,
       ));
     }
-    return {};
+    return [];
   }
 
   Future<List<dynamic>> songlisu(
@@ -95,7 +136,6 @@ class Dat {
       String userid, String songid, BuildContext context) async {
     try {
       List<String> def = [];
-      late Map<String, String> abc = {};
       final mainCollectionRef = FirebaseFirestore.instance
           .collection('all songs')
           .doc(userid)
@@ -116,12 +156,6 @@ class Dat {
       }
       def.add(l.toString());
       def.add(mainCollectionSnapshot['genre'].toString());
-      Map<String, dynamic>? songsList = mainCollectionSnapshot['song'];
-      if (songsList != null) {
-        for (var song in songsList.keys) {
-          abc[song] = songsList[song].toString();
-        }
-      }
       return def;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -132,12 +166,8 @@ class Dat {
     return [];
   }
 
-  Future<bool> updateDocumentField(
-      String bookId,
-      String songid,
-      List<String> fieldToUpdate,
-      Map<String, String> upde,
-      BuildContext context) async {
+  Future<bool> updateDocumentField(String bookId, String songid,
+      List<String> fieldToUpdate, List<Map> upde, BuildContext context) async {
     try {
       List<int> numbersList = [];
 
@@ -184,12 +214,8 @@ class Dat {
     return false;
   }
 
-  Future<bool> addition(
-      String userid,
-      String songid,
-      List<String> fieldToUpdate,
-      Map<String, String> upde,
-      BuildContext context) async {
+  Future<bool> addition(String userid, String songid,
+      List<String> fieldToUpdate, List<Map> upde, BuildContext context) async {
     try {
       final mainCollectionRef =
           FirebaseFirestore.instance.collection('all songs').doc(userid);
@@ -216,31 +242,7 @@ class Dat {
           }
         }
       }
-      List<Map<String, dynamic>> dataToSave = [];
-      if (upde.isNotEmpty) {
-        for (var i in upde.keys) {
-          dataToSave.add({
-            'name': i,
-            'value': upde[i],
-            'order': FieldValue.serverTimestamp()
-          });
-        }
-      }
 
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final WriteBatch batch = firestore.batch();
-      for (var itemData in dataToSave) {
-        batch.set(
-          firestore
-              .collection('all songs')
-              .doc(userid)
-              .collection('songs')
-              .doc(p),
-          itemData,
-        );
-      }
-
-      await batch.commit();
       await FirebaseFirestore.instance
           .collection('all songs')
           .doc(userid)

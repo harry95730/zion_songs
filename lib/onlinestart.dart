@@ -1,11 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:songs_app/classoffunc/database.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:songs_app/classoffunc/extractdata.dart';
+import 'package:songs_app/info.dart';
 import 'package:songs_app/loginfloder/addbook.dart';
 import 'package:songs_app/classoffunc/classes.dart';
 import 'package:songs_app/loginfloder/updatebook.dart';
-import 'package:songs_app/onlinesongs/onlinehome.dart';
+import 'package:songs_app/offlinesongs/favsongs.dart';
+import 'package:songs_app/offlinesongs/history.dart';
+import 'package:songs_app/offlinesongs/opensongoftheday.dart';
+import 'package:songs_app/onlinesongs/onhome.dart';
 
 // ignore: must_be_immutable
 class Onlinepage extends StatefulWidget {
@@ -27,7 +32,7 @@ class _OnlinepageState extends State<Onlinepage> {
 
   Future<void> initializeFirebase() async {
     try {
-      List<List<String>> px = await Dbm().dataread(context);
+      List<List<String>> px = await Dat().dataread(context);
       setState(() {
         _initialized = true;
         x = px;
@@ -42,19 +47,9 @@ class _OnlinepageState extends State<Onlinepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _initialized
-          ? Container(
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/i12.jpg"),
-                    fit: BoxFit.cover),
-              ),
-              child: Listofbooks(onlinelist: x),
-            )
-          : const Center(child: CircularProgressIndicator()),
-    );
+    return _initialized
+        ? Listofbooks(onlinelist: x)
+        : const Center(child: CircularProgressIndicator());
   }
 }
 
@@ -105,35 +100,29 @@ class LlistofStaofbooks extends State<Listofbooks> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("assets/images/i12.jpg"), fit: BoxFit.cover),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(
-                context,
-              );
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: const Text(
-            'SEARCH SONG BOOK ',
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 25.0,
-              fontFamily: 'f1',
-              color: Color.fromARGB(255, 16, 44, 86),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(
+              context,
+            );
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+        ),
+        title: const Text(
+          'SEARCH SONG BOOK ',
+          style: TextStyle(
+            decoration: TextDecoration.none,
+            fontSize: 25.0,
+            fontFamily: 'f1',
+            color: Color.fromARGB(255, 16, 44, 86),
           ),
         ),
-        body: Column(
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -144,13 +133,15 @@ class LlistofStaofbooks extends State<Listofbooks> {
                   prefixIcon: const Icon(Icons.search),
                   labelText: 'Search Song book',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
+                      borderRadius: BorderRadius.circular(2.0)),
                 ),
               ),
             ),
             Expanded(
               child: _vro
                   ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
                         var son1 = _searchResults[index][0];
@@ -173,7 +164,7 @@ class LlistofStaofbooks extends State<Listofbooks> {
                                 color: const Color.fromARGB(255, 10, 19, 37),
                                 width: 2,
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(2),
                             ),
                             child: InkWell(
                               onTap: () {
@@ -258,6 +249,96 @@ class LlistofStaofbooks extends State<Listofbooks> {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return Decorate().butto2(context);
+        },
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Colors.black,
+                Colors.pinkAccent,
+              ])),
+              accountName: Text('ZION SONGS'),
+              accountEmail: SelectableText(
+                'zionhouseofprayer497@gmail.com',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/s.png'),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.queue_music, color: Colors.blue.shade100),
+              title: const Text(
+                'Song of the day',
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Songoftheday()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.favorite, color: Colors.pinkAccent),
+              title: const Text(
+                'Favourites',
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Fav()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history, color: Colors.black),
+              title: const Text(
+                'history',
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const History()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.online_prediction),
+              title: const Text('Search Online'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Onlinepage()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.not_listed_location_outlined,
+                  color: Colors.deepPurple.shade300),
+              title: const Text('App Info'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SecondPage()));
+              },
+            ),
+            ListTile(
+              leading:
+                  const Icon(Icons.share_outlined, color: Colors.blueAccent),
+              title: const Text('Share App'),
+              onTap: () {
+                Share.share(
+                    "https;//play.google.com/stote/appsdetails?id=com,instructivetech.testapp");
+              },
             ),
           ],
         ),

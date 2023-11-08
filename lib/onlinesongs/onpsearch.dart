@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:songs_app/classoffunc/classes.dart';
-import 'package:songs_app/onlinesongs/onlineqtelugu.dart';
-import 'package:songs_app/onlinesongs/onlinergenre.dart';
-import 'package:songs_app/onlinesongs/onlinesong.dart';
+import 'package:songs_app/onlinesongs/onqtelugu.dart';
+import 'package:songs_app/onlinesongs/onrgenre.dart';
+import 'package:songs_app/onlinesongs/onsong.dart';
 
 class Listofbooksongs extends StatefulWidget {
   Listofbooksongs({
@@ -176,47 +176,44 @@ class _ShowsonglistState extends State<Showsonglist> {
                                       ],
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListTile(
-                                      title: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            son1,
-                                            maxLines: 1,
-                                            style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontStyle: FontStyle.italic,
-                                              decoration: TextDecoration.none,
-                                            ),
+                                  child: ListTile(
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          son1,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic,
+                                            decoration: TextDecoration.none,
                                           ),
-                                          Text(
-                                            _searchResults[index][2]
-                                                .toUpperCase(),
-                                            maxLines: 1,
-                                            style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontStyle: FontStyle.italic,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: Text(
-                                        _searchResults[index][3].toString(),
-                                        maxLines: 1,
-                                        style: const TextStyle(
-                                          fontSize: 18.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.none,
                                         ),
+                                        Text(
+                                          _searchResults[index][2]
+                                              .toUpperCase(),
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(
+                                      _searchResults[index][3].toString(),
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
                                       ),
                                     ),
                                   ),

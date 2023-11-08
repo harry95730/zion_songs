@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:songs_app/classoffunc/classes.dart';
-import 'package:songs_app/onlinesongs/onlinepsearch.dart';
-import 'package:songs_app/onlinesongs/onlinehome.dart';
-import 'package:songs_app/onlinesongs/onlineqtelugu.dart';
-import 'package:songs_app/onlinesongs/onlinesong.dart';
+import 'package:songs_app/onlinesongs/onpsearch.dart';
+import 'package:songs_app/onlinesongs/onhome.dart';
+import 'package:songs_app/onlinesongs/onqtelugu.dart';
+import 'package:songs_app/onlinesongs/onsong.dart';
 
 class Onlinegenre extends StatelessWidget {
   const Onlinegenre({super.key});
@@ -190,60 +190,57 @@ class _Onlinegenre1State extends State<Onlinegenre1> {
                                   );
                                 },
                                 child: Ink(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListTile(
-                                      title: son[1].isNotEmpty
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  son[1],
-                                                  maxLines: 1,
-                                                  style: const TextStyle(
-                                                    fontSize: 20.0,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontStyle: FontStyle.italic,
-                                                    decoration:
-                                                        TextDecoration.none,
-                                                  ),
+                                  child: ListTile(
+                                    title: son[1].isNotEmpty
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                son[1],
+                                                maxLines: 1,
+                                                style: const TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle: FontStyle.italic,
+                                                  decoration:
+                                                      TextDecoration.none,
                                                 ),
-                                                Text(
-                                                  son[2].toUpperCase(),
-                                                  maxLines: 1,
-                                                  style: const TextStyle(
-                                                    fontSize: 20.0,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontStyle: FontStyle.italic,
-                                                    decoration:
-                                                        TextDecoration.none,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : Text(
-                                              son[2].toUpperCase(),
-                                              maxLines: 1,
-                                              style: const TextStyle(
-                                                fontSize: 20.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle: FontStyle.italic,
-                                                decoration: TextDecoration.none,
                                               ),
+                                              Text(
+                                                son[2].toUpperCase(),
+                                                maxLines: 1,
+                                                style: const TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle: FontStyle.italic,
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            son[2].toUpperCase(),
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.italic,
+                                              decoration: TextDecoration.none,
                                             ),
-                                      trailing: Text(
-                                        son[3].toString(),
-                                        maxLines: 1,
-                                        style: const TextStyle(
-                                          fontSize: 18.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.none,
-                                        ),
+                                          ),
+                                    trailing: Text(
+                                      son[3].toString(),
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
                                       ),
                                     ),
                                   ),

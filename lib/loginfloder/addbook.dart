@@ -1,7 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:songs_app/loginfloder/authentication.dart';
-import 'package:songs_app/songaddingoreditingfolder/songaddedit.dart';
+import 'package:songs_app/offlinesongs/ohome.dart';
+import 'package:songs_app/onlinestart.dart';
+import 'package:songs_app/songaddingoreditingfolder/page1edit.dart';
 import 'package:songs_app/loginfloder/updatebook.dart';
 
 // ignore: must_be_immutable
@@ -15,6 +22,9 @@ class EntryPage extends StatefulWidget {
 }
 
 class _EntryPageState extends State<EntryPage> {
+  File? filea;
+  bool isload = false;
+  String tet = 'PICK A IMAGE FOR BACKGROUND';
   final List<TextEditingController> _controllers =
       List.generate(8, (index) => TextEditingController());
 
@@ -26,70 +36,147 @@ class _EntryPageState extends State<EntryPage> {
       'PASSWORD',
       'CONFIRM PASSWORD',
       'MOBILE NUMBER',
-      'PIN NUMBER FOR BOOK',
+      'PIN FOR BOOK',
       'DISPLAY NAME',
       'VERSE FOR DISPLAY',
       'CHRUCH NAME'
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(
-              context,
-            );
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'SONG BOOK DETAILS',
-          style: TextStyle(
-            decoration: TextDecoration.none,
-            fontFamily: 'f1',
-            color: Color.fromARGB(255, 16, 44, 86),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(
-                  top: 12.0, bottom: 5.0, left: 12.0, right: 12.0),
+    return isload
+        ? const Center(
+            child: Text(
+              'NO SONG BOOK FOUND',
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                decoration: TextDecoration.none,
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int i = 0; i < 8; i++)
-                  Padding(
-                    padding: const EdgeInsets.all(9.0),
-                    child: TextField(
-                      obscureText: i == 1 || i == 2 ? true : false,
-                      controller: _controllers[i],
-                      onChanged: (value) {
-                        setState(() {
-                          manag[i] = '';
-                        });
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'SONG BOOK DETAILS',
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontFamily: 'f1',
+                  color: Color.fromARGB(255, 16, 44, 86),
+                ),
+              ),
+            ),
+            body: Center(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (int i = 0; i < 8; i++)
+                      Padding(
+                        padding: const EdgeInsets.all(9.0),
+                        child: SizedBox(
+                          height: 45,
+                          child: TextField(
+                            style: const TextStyle(fontSize: 16.0),
+                            obscureText: i == 1 || i == 2 ? true : false,
+                            controller: _controllers[i],
+                            onChanged: (value) {
+                              setState(() {
+                                manag[i] = '';
+                              });
+                            },
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.edit_outlined),
+                              labelText: manage[i],
+                              errorText: manag[i].isNotEmpty ? manag[i] : null,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          tet,
+                          style: TextStyle(
+                              color: tet == 'PICK A IMAGE FOR BACKGROUND'
+                                  ? Colors.red
+                                  : Colors.green),
+                        ),
+                        OutlinedButton(
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: ['jpg', 'png'],
+                            );
+                            if (result != null) {
+                              File file = File(result.files.single.path!);
+                              if (file.path.endsWith('jpg') ||
+                                  file.path.endsWith('png')) {
+                                filea = file;
+                                setState(() {
+                                  tet = 'IMAGE IS SELECTED';
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                filea = null;
+                                tet = 'PICK A IMAGE FOR BACKGROUND';
+                              });
+                            }
+                          },
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'UPLOAD',
+                          ),
+                        )
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Updatebook(x: widget.x),
+                            ));
                       },
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.edit_outlined),
-                        labelText: manage[i],
-                        errorText: manag[i].isNotEmpty ? manag[i] : null,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0)),
+                      child: const Text(
+                        'EXISTING USERS ? LOGIN ',
                       ),
                     ),
+                    const SizedBox(
+                      height: 65,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: ElevatedButton(
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 14.0),
-            ),
-            FloatingActionButton.extended(
+                ),
                 onPressed: () async {
+                  setState(() {
+                    isload = true;
+                  });
                   if (_controllers[1].text != _controllers[2].text) {
                     setState(() {
                       manag[2] = "Password doesn't match";
@@ -111,7 +198,6 @@ class _EntryPageState extends State<EntryPage> {
                         return;
                       }
                     }
-
                     setState(() {
                       manag[5] = '';
                     });
@@ -123,6 +209,7 @@ class _EntryPageState extends State<EntryPage> {
                         return;
                       }
                     }
+
                     User? result = await AuthService().registerUser1(
                         _controllers[0].text,
                         _controllers[1].text,
@@ -130,12 +217,12 @@ class _EntryPageState extends State<EntryPage> {
                         _controllers[4].text,
                         _controllers[6].text,
                         _controllers[7].text,
+                        filea,
                         context);
                     if (result != null) {
                       for (int i = 0; i < 8; i++) {
                         _controllers[i].text = '';
                       }
-                      // ignore: use_build_context_synchronously
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -143,62 +230,53 @@ class _EntryPageState extends State<EntryPage> {
                                   Addeditsong(eachid: result.uid.toString())));
                     }
                   }
+                  setState(() {
+                    isload = false;
+                  });
                 },
-                label: const Text('SUBMIT', style: TextStyle(fontSize: 25))),
-            const Padding(padding: EdgeInsets.only(bottom: 10.0)),
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(
+                child: const Text('SUBMIT')),
+            bottomNavigationBar: BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search, color: Colors.blue),
+                  label: 'search song book',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.offline_bolt),
+                  label: 'offline songs',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.update),
+                  label: 'upload songs',
+                ),
+              ],
+              onTap: (index) {
+                if (index == 0) {
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => Updatebook(x: widget.x),
-                    ));
+                    MaterialPageRoute(builder: (context) => const Onlinepage()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+                if (index == 1) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HebronPage()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+                if (index == 2) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Updatebook(x: widget.x),
+                      ));
+                }
               },
-              child: const Text(
-                'EXISTING USERS ? LOGIN ',
-              ),
             ),
-            const Padding(padding: EdgeInsets.only(bottom: 10.0)),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.blue),
-            label: 'search song book',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.offline_bolt),
-            label: 'offline songs',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.update),
-            label: 'upload songs',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(
-              context,
-            );
-          }
-          if (index == 1) {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          }
-          if (index == 2) {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Updatebook(x: widget.x),
-                ));
-          }
-        },
-      ),
-    );
+          );
   }
 
   void showErrorNotification(BuildContext context, String message) {

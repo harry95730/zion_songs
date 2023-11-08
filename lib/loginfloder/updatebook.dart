@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:songs_app/loginfloder/addbook.dart';
 import 'package:songs_app/loginfloder/authentication.dart';
 import 'package:songs_app/loginfloder/forgotpass.dart';
-import 'package:songs_app/songaddingoreditingfolder/songaddedit.dart';
+import 'package:songs_app/songaddingoreditingfolder/page1edit.dart';
 
 // ignore: must_be_immutable
 class Updatebook extends StatefulWidget {
@@ -34,67 +34,65 @@ class UpdatebookState extends State<Updatebook> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'UPDATE',
+          'LOGIN TO UPDATE',
           style: TextStyle(
             decoration: TextDecoration.none,
             fontFamily: 'f1',
+            fontSize: 22.0,
             color: Color.fromARGB(255, 16, 44, 86),
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Text(
-                'LOGIN TO UPDATE',
-                style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontFamily: 'f1',
-                  fontSize: 22.0,
-                  color: Color.fromARGB(255, 16, 44, 86),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(9.0),
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  style: const TextStyle(fontSize: 16.0),
+                  controller: _controller1,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.edit_outlined),
+                    labelText: 'EMAIL',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.only(
-                      top: 12.0, bottom: 5.0, left: 9.0, right: 9.0),
-                  child: TextField(
-                    controller: _controller1,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.edit_outlined),
-                      labelText: 'EMAIL',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                    ),
-                  )),
-              Padding(
-                  padding: const EdgeInsets.all(9.0),
-                  child: TextField(
-                    obscureText: true,
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.edit_outlined),
-                      labelText: 'PASSWORD',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                    ),
-                  )),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Forgotpass(),
-                      ));
-                },
-                child: const Text(
-                  'FORGOT PASSWORD',
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  style: const TextStyle(fontSize: 16.0),
+                  obscureText: true,
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.edit_outlined),
+                    labelText: 'PASSWORD',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                  ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(bottom: 10.0)),
-              FloatingActionButton.extended(
+            ),
+            Center(
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
                   onPressed: () async {
                     User? result = await AuthService().loginUser(
                         _controller1.text, _controller.text, context);
@@ -108,22 +106,38 @@ class UpdatebookState extends State<Updatebook> {
                                   Addeditsong(eachid: result.uid.toString())));
                     }
                   },
-                  label: const Text('SUBMIT', style: TextStyle(fontSize: 25))),
-              const Padding(padding: EdgeInsets.only(bottom: 10.0)),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EntryPage(x: widget.x),
-                      ));
-                },
-                child: const Text(
-                  'JOIN AS A NEW USER ? SIGNUP ',
-                ),
+                  child: const Text(
+                    'SUBMIT',
+                  )),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Forgotpass(),
+                    ));
+              },
+              child: const Text(
+                'FORGOT PASSWORD',
               ),
-            ],
-          ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EntryPage(x: widget.x),
+                    ));
+              },
+              child: const Text(
+                'JOIN AS A NEW USER ? SIGNUP ',
+              ),
+            ),
+            const SizedBox(
+              height: 65,
+            )
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

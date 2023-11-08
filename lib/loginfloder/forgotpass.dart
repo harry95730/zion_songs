@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:songs_app/loginfloder/authentication.dart';
+import 'package:songs_app/offlinesongs/ohome.dart';
+import 'package:songs_app/onlinestart.dart';
 
 // ignore: must_be_immutable
 class Forgotpass extends StatefulWidget {
@@ -99,13 +101,18 @@ class ForgotpassState extends State<Forgotpass> {
           ],
           onTap: (index) {
             if (index == 0) {
-              Navigator.pop(context);
-              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Onlinepage()),
+                (Route<dynamic> route) => false,
+              );
             }
             if (index == 1) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const HebronPage()),
+                (Route<dynamic> route) => false,
+              );
             }
           },
         ),
