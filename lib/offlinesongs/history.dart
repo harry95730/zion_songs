@@ -65,7 +65,7 @@ class _HistoryState extends State<History> {
                     myData1.clear();
                     await box.put('historyoftheapp', myData1);
                     await box.close();
-                    sondat.clear();
+                    songhis1.clear();
                     setState(() {});
                   }
                 },
